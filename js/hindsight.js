@@ -124,17 +124,17 @@ export class HindsightMemoryClient {
     let recommendedSpotId = null;
 
     if (text.includes('usual') || text.includes('routine') || text.includes('my spot')) {
-      recommendedSpotId = 'P1-02';
-      // verify if P1-02 is available
       const p1Spots = currentFloors['P1'] ? currentFloors['P1'].spots : [];
-      const spot = p1Spots.find(s => s.id === 'P1-02');
-      const isFree = spot && spot.status === 'available';
+      const usualSpot = p1Spots.find(s => s.id === 'P1-01') || p1Spots.find(s => s.type === 'ev');
+      const isFree = usualSpot && usualSpot.status === 'available';
 
       if (isFree) {
-        responseText = `Based on your Hindsight memory profile, your usual 50kW EV bay **P1-02** (18m from elevator) is currently available! Would you like me to reserve it?`;
+        recommendedSpotId = usualSpot.id;
+        responseText = `Based on your Hindsight memory profile, your usual 50kW EV bay **${usualSpot.id}** (${usualSpot.distanceToLift} from elevator) is currently available! Would you like me to reserve it?`;
       } else {
-        recommendedSpotId = 'P1-06';
-        responseText = `Your favorite bay P1-02 is currently occupied, but I recalled your preference for 50kW EV charging near the elevator. I found **P1-06** right across the lane which is open!`;
+        const altSpot = p1Spots.find(s => s.type === 'ev' && s.status === 'available') || p1Spots.find(s => s.status === 'available');
+        recommendedSpotId = altSpot ? altSpot.id : 'P1-03';
+        responseText = `Your favorite bay is currently occupied, but I recalled your preference for 50kW EV charging near the elevator. I found **${recommendedSpotId}** which is open right now!`;
       }
       memoryUsed = `Recalled driver profile: 50kW EV + Level P1 elevator proximity`;
     } 
@@ -145,8 +145,10 @@ export class HindsightMemoryClient {
       recommendedSpotId = last.spotId;
     }
     else if (text.includes('ev') || text.includes('charge') || text.includes('charging')) {
-      recommendedSpotId = 'P1-04';
-      responseText = `I recall you drive a ${this.memories.driver.vehicleType}. On Level P1, bay **P1-04** features high-power 50kW DC fast charging and is ready for plug-in.`;
+      const p1Spots = currentFloors['P1'] ? currentFloors['P1'].spots : [];
+      const evSpot = p1Spots.find(s => s.type === 'ev' && s.status === 'available') || p1Spots[0];
+      recommendedSpotId = evSpot ? evSpot.id : 'P1-01';
+      responseText = `I recall you drive a ${this.memories.driver.vehicleType}. On Level P1, bay **${recommendedSpotId}** features high-power 50kW DC fast charging and is ready for plug-in.`;
       memoryUsed = `Vehicle entity: ${this.memories.driver.vehicleType}`;
     }
     else if (text.includes('remember') || text.includes('profile') || text.includes('who am i')) {

@@ -257,7 +257,7 @@ class App {
         <div>${result.text}</div>
         ${result.memoryUsed ? `<div class="memory-tag-badge">🧠 Hindsight: ${result.memoryUsed}</div>` : ''}
         ${result.recommendedSpotId ? `
-          <button class="primary-btn" id="btn-select-rec-spot" style="margin-top: 0.6rem; padding: 0.35rem 0.8rem; font-size: 0.78rem;">
+          <button class="primary-btn btn-select-rec-spot" style="margin-top: 0.6rem; padding: 0.35rem 0.8rem; font-size: 0.78rem;">
             Highlight ${result.recommendedSpotId} on Map
           </button>
         ` : ''}
@@ -266,7 +266,7 @@ class App {
       chatBody.scrollTop = chatBody.scrollHeight;
 
       if (result.recommendedSpotId) {
-        const btn = botBubble.querySelector('#btn-select-rec-spot');
+        const btn = botBubble.querySelector('.btn-select-rec-spot');
         if (btn) {
           btn.addEventListener('click', () => {
             const spot = this.findSpotById(result.recommendedSpotId);
