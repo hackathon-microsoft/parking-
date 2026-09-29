@@ -7,6 +7,7 @@ import { ParkingMap } from './parkingMap.js';
 import { BookingManager } from './booking.js';
 import { IoTFlowSimulator } from './simulation.js';
 import { sound } from './sound.js';
+import { HindsightMemoryClient } from './hindsight.js';
 
 class App {
   constructor() {
@@ -15,6 +16,7 @@ class App {
     this.map = null;
     this.bookingManager = null;
     this.simulator = null;
+    this.hindsight = new HindsightMemoryClient();
   }
 
   init() {
@@ -29,6 +31,10 @@ class App {
           this.updateKPIs();
           this.showToast(`Success! Spot ${booking.spotId} is reserved for you.`, 'success');
         }
+
+        // Retain booking into Hindsight AI Memory
+        this.hindsight.retain('booking', booking);
+        this.renderHindsightMemoryGraph();
       }
     });
 
@@ -57,6 +63,7 @@ class App {
     this.updateKPIs();
     this.renderPeakHoursChart();
     this.renderIoTNodes();
+    this.renderHindsightMemoryGraph();
   }
 
   findSpotById(spotId) {
@@ -152,6 +159,160 @@ class App {
           this.showToast('No active bookings found. Select an available spot to reserve!', 'info');
         }
       });
+    }
+
+    // Hindsight AI Concierge Drawer Open/Close
+    const openHindsightBtn = document.getElementById('btn-open-hindsight');
+    const closeHindsightBtn = document.getElementById('close-hindsight-drawer');
+    const hindsightDrawer = document.getElementById('hindsight-drawer');
+
+    if (openHindsightBtn && hindsightDrawer) {
+      openHindsightBtn.addEventListener('click', () => {
+        sound.playSlotSelect();
+        hindsightDrawer.classList.add('open');
+        this.renderHindsightMemoryGraph();
+      });
+    }
+
+    if (closeHindsightBtn && hindsightDrawer) {
+      closeHindsightBtn.addEventListener('click', () => {
+        hindsightDrawer.classList.remove('open');
+      });
+    }
+
+    // Hindsight Tabs: Chat vs Memory Graph
+    const tabChat = document.getElementById('tab-chat-mode');
+    const tabGraph = document.getElementById('tab-graph-mode');
+    const chatBody = document.getElementById('hindsight-chat-body');
+    const graphPanel = document.getElementById('hindsight-memory-panel');
+    const inputBar = document.querySelector('.hindsight-input-bar');
+
+    if (tabChat && tabGraph) {
+      tabChat.addEventListener('click', () => {
+        tabChat.classList.add('active');
+        tabGraph.classList.remove('active');
+        chatBody.style.display = 'flex';
+        graphPanel.style.display = 'none';
+        if (inputBar) inputBar.style.display = 'flex';
+      });
+
+      tabGraph.addEventListener('click', () => {
+        tabGraph.classList.add('active');
+        tabChat.classList.remove('active');
+        chatBody.style.display = 'none';
+        graphPanel.style.display = 'flex';
+        if (inputBar) inputBar.style.display = 'none';
+        this.renderHindsightMemoryGraph();
+      });
+    }
+
+    // Quick Prompt Pills
+    document.querySelectorAll('.prompt-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const text = pill.getAttribute('data-prompt');
+        this.handleHindsightQuery(text);
+      });
+    });
+
+    // Chat Text Input & Send
+    const sendBtn = document.getElementById('hindsight-send-btn');
+    const chatInput = document.getElementById('hindsight-input');
+
+    const submitQuery = () => {
+      const q = chatInput.value.trim();
+      if (!q) return;
+      chatInput.value = '';
+      this.handleHindsightQuery(q);
+    };
+
+    if (sendBtn) sendBtn.addEventListener('click', submitQuery);
+    if (chatInput) {
+      chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') submitQuery();
+      });
+    }
+  }
+
+  handleHindsightQuery(queryText) {
+    const chatBody = document.getElementById('hindsight-chat-body');
+    if (!chatBody) return;
+
+    sound.playClick();
+
+    // 1. Append User Bubble
+    const userBubble = document.createElement('div');
+    userBubble.className = 'chat-bubble user';
+    userBubble.textContent = queryText;
+    chatBody.appendChild(userBubble);
+
+    // 2. Process with Hindsight Agent Memory
+    const result = this.hindsight.processQuery(queryText, this.floors);
+
+    // 3. Append Assistant Bubble
+    setTimeout(() => {
+      sound.playSlotSelect();
+      const botBubble = document.createElement('div');
+      botBubble.className = 'chat-bubble assistant';
+      botBubble.innerHTML = `
+        <div>${result.text}</div>
+        ${result.memoryUsed ? `<div class="memory-tag-badge">🧠 Hindsight: ${result.memoryUsed}</div>` : ''}
+        ${result.recommendedSpotId ? `
+          <button class="primary-btn" id="btn-select-rec-spot" style="margin-top: 0.6rem; padding: 0.35rem 0.8rem; font-size: 0.78rem;">
+            Highlight ${result.recommendedSpotId} on Map
+          </button>
+        ` : ''}
+      `;
+      chatBody.appendChild(botBubble);
+      chatBody.scrollTop = chatBody.scrollHeight;
+
+      if (result.recommendedSpotId) {
+        const btn = botBubble.querySelector('#btn-select-rec-spot');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            const spot = this.findSpotById(result.recommendedSpotId);
+            if (spot) {
+              if (this.map.currentLevel !== spot.level) {
+                this.map.setLevel(spot.level);
+                // Update tabs active state
+                document.querySelectorAll('.level-tab').forEach(t => {
+                  t.classList.toggle('active', t.getAttribute('data-level') === spot.level);
+                });
+              }
+              this.map.selectSpot(spot);
+              document.getElementById('parking-map-container').scrollIntoView({ behavior: 'smooth' });
+              this.showToast(`Selected ${spot.id} recommended by Hindsight`, 'success');
+            }
+          });
+        }
+      }
+    }, 280);
+
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  renderHindsightMemoryGraph() {
+    const mem = this.hindsight.memories;
+    if (!mem) return;
+
+    const plateEl = document.getElementById('mem-plate');
+    if (plateEl) plateEl.textContent = mem.driver.plate;
+
+    const vehicleEl = document.getElementById('mem-vehicle');
+    if (vehicleEl) vehicleEl.textContent = mem.driver.vehicleType;
+
+    const chargerEl = document.getElementById('mem-charger');
+    if (chargerEl) chargerEl.textContent = `${mem.driver.preferredCharger} (${mem.driver.preferredLevel})`;
+
+    const episodesList = document.getElementById('mem-episodes-list');
+    if (episodesList) {
+      episodesList.innerHTML = mem.history.map(ep => `
+        <div class="memory-item-row">
+          <div>
+            <strong>${ep.spotId}</strong> <span style="font-size: 0.75rem; color: var(--text-dim);">(${ep.date})</span>
+            <div style="font-size: 0.72rem; color: var(--cyan-primary);">${ep.addOns && ep.addOns.length ? ep.addOns.join(', ') : 'Standard Stay'}</div>
+          </div>
+        </div>
+      `).join('');
     }
   }
 

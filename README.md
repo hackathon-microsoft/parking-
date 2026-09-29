@@ -40,6 +40,12 @@
 - **Quick Session Extension**: One-click `+1 Hour` extension button.
 - **Direct Ticket Access**: Instantly open your gate pass QR code from anywhere on the page.
 
+### 6. Hindsight AI Agent Memory Concierge (Microsoft Agent Framework)
+- **Retain, Recall & Reflect**: Implements the **Hindsight** agent memory architecture (`vectorize-io/hindsight`) to maintain driver entity graphs and episodic parking history across sessions.
+- **Habit-Aware Recommendations**: Recalls driver preferences (e.g. *Tesla Model Y requiring 50kW Fast Charging on Level P1 close to elevator*) and automatically pinpoints and selects ideal open slots on the map.
+- **Memory Graph Inspector**: Inspect driver entity profiles, historical episodes, and synthesized reflections directly within the slide-out AI assistant.
+- **Backend Microservice**: Includes `backend/hindsight_service.py` exposing Hindsight REST endpoints compatible with the Microsoft Agent Framework.
+
 ---
 
 ## 🚀 Getting Started
