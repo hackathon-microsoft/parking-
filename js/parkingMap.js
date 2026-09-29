@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ParkPulse - Interactive Parking Floor Map Component
+   ParkIn - Interactive Parking Floor Map Component
    ========================================================================== */
 
 import { sound } from './sound.js';

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ParkPulse - Reservation Engine, Digital Pass & QR Code Generator
+   ParkIn - Reservation Engine, Digital Pass & QR Code Generator
    ========================================================================== */
 
 import { sound } from './sound.js';
@@ -10,8 +10,8 @@ export class BookingManager {
     this.ticketModalEl = document.getElementById('ticket-modal');
     this.activeSessionEl = document.getElementById('active-session-widget');
     this.currentSpot = null;
-    this.activeBookings = JSON.parse(localStorage.getItem('parkpulse_bookings') || '[]');
-    this.currentSession = JSON.parse(localStorage.getItem('parkpulse_active_session') || 'null');
+    this.activeBookings = JSON.parse(localStorage.getItem('parkin_bookings') || localStorage.getItem('parkpulse_bookings') || '[]');
+    this.currentSession = JSON.parse(localStorage.getItem('parkin_active_session') || localStorage.getItem('parkpulse_active_session') || 'null');
     this.onBookingSuccess = options.onBookingSuccess || (() => {});
 
     this.timerInterval = null;
@@ -138,10 +138,10 @@ export class BookingManager {
 
     // Save
     this.activeBookings.unshift(booking);
-    localStorage.setItem('parkpulse_bookings', JSON.stringify(this.activeBookings));
+    localStorage.setItem('parkin_bookings', JSON.stringify(this.activeBookings));
 
     this.currentSession = booking;
-    localStorage.setItem('parkpulse_active_session', JSON.stringify(this.currentSession));
+    localStorage.setItem('parkin_active_session', JSON.stringify(this.currentSession));
 
     this.closeBooking();
     sound.playSuccess();
@@ -252,7 +252,7 @@ export class BookingManager {
     if (extendBtn) {
       extendBtn.onclick = () => {
         booking.expiresAt += 3600 * 1000;
-        localStorage.setItem('parkpulse_active_session', JSON.stringify(booking));
+        localStorage.setItem('parkin_active_session', JSON.stringify(booking));
         sound.playClick();
         update();
       };

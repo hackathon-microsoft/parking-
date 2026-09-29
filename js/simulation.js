@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ParkPulse - Live IoT Sensor & Vehicle Flow Simulator
+   ParkIn - Live IoT Sensor & Vehicle Flow Simulator
    ========================================================================== */
 
 import { sound } from './sound.js';

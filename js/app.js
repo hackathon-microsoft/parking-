@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ParkPulse - Main Application Controller
+   ParkIn - Main Application Controller
    ========================================================================== */
 
 import { LOCATIONS, INITIAL_FLOORS, HOURLY_PEAK_DATA, IOT_TELEMETRY_NODES } from './data.js';
@@ -288,6 +288,6 @@ class App {
 
 // Bootstrap on DOM loaded
 document.addEventListener('DOMContentLoaded', () => {
-  window.parkPulseApp = new App();
-  window.parkPulseApp.init();
+  window.parkInApp = new App();
+  window.parkInApp.init();
 });

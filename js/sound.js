@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ParkPulse - Procedural Web Audio API Sound Effects (Zero External Assets)
+   ParkIn - Procedural Web Audio API Sound Effects (Zero External Assets)
    ========================================================================== */
 
 class SoundEngine {

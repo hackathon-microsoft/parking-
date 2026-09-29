@@ -1,5 +1,5 @@
 /* ==========================================================================
-   ParkPulse - Mock IoT Data, Locations, Rates and Floor Configurations
+   ParkIn - Mock IoT Data, Locations, Rates and Floor Configurations
    ========================================================================== */
 
 export const LOCATIONS = [

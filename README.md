@@ -1,11 +1,11 @@
-# ParkPulse — Next-Gen Smart City Parking & Mobility Platform
+# ParkIn — Next-Gen Smart City Parking & Mobility Platform
 
 [![Microsoft Hackathon](https://img.shields.io/badge/Microsoft-Hackathon%20Project-0078D4?logo=microsoft&logoColor=white)](https://github.com/hackathon-microsoft/parking-)
 [![Tech Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20ES6%20Modules-cyan)](https://developer.mozilla.org/)
 [![IoT Architecture](https://img.shields.io/badge/IoT-Azure%20IoT%20Gateway%20Sim-10b981)](https://azure.microsoft.com/en-us/products/iot-hub)
 [![Design](https://img.shields.io/badge/UI%2FUX-Glassmorphism%20%26%20Neon-8b5cf6)](#ui-and-design-features)
 
-**ParkPulse** is an intelligent, real-time smart parking management and spot reservation platform built for modern urban mobility hubs, enterprise campuses, and smart cities.
+**ParkIn** is an intelligent, real-time smart parking management and spot reservation platform built for modern urban mobility hubs, enterprise campuses, and smart cities.
 
 ---
 
