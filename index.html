@@ -20,24 +20,20 @@
 </head>
 <body>
 
-  <!-- Top Real-Time IoT Telemetry Banner -->
-  <aside class="simulation-bar" aria-label="IoT Network Telemetry Banner">
+  <!-- Top Real-Time Status Banner -->
+  <aside class="simulation-bar" aria-label="Deck Status">
     <div class="pulse-indicator">
       <span class="pulse-dot"></span>
-      <span id="sim-status-label">LIVE IOT SIMULATION ACTIVE</span>
+      <span id="sim-status-label">Live Deck Active</span>
     </div>
     <div class="sim-info">
       <div class="sim-metric">
-        <span>Network:</span>
-        <strong>Azure IoT Hub</strong>
-      </div>
-      <div class="sim-metric">
         <span>Open Slots:</span>
-        <strong id="banner-available-count">Calculating...</strong>
+        <strong id="banner-available-count" style="color: var(--status-available);">18 Available</strong>
       </div>
       <div class="sim-metric">
-        <span>Dynamic Pricing:</span>
-        <strong style="color: var(--cyan-primary);">ENABLED</strong>
+        <span>Standard Rate:</span>
+        <strong style="color: var(--cyan-primary);">$5.00 / hr</strong>
       </div>
     </div>
   </aside>
@@ -118,57 +114,38 @@
       </div>
 
       <!-- Quick Search & Facility Selector Card -->
-      <div class="search-filter-card" role="search">
+      <div class="search-filter-card" role="search" style="grid-template-columns: 2fr 1.5fr auto;">
         <div class="filter-group">
-          <label class="filter-label" for="location-select">Parking Facility Location</label>
+          <label class="filter-label" for="location-select">Parking Facility</label>
           <div class="filter-input-wrap">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
             <select class="filter-input" id="location-select">
-              <option value="bldg-99">Microsoft Campus - Bldg 99 Hub (Redmond)</option>
-              <option value="downtown-deck">Downtown Tech District Deck (Seattle)</option>
-              <option value="metro-airport">Metro Terminal Express Deck (SeaTac)</option>
+              <option value="bldg-99">Microsoft Campus - Bldg 99 (Redmond)</option>
+              <option value="downtown-deck">Downtown Tech District (Seattle)</option>
+              <option value="metro-airport">Airport Express Deck (SeaTac)</option>
             </select>
           </div>
         </div>
 
         <div class="filter-group">
-          <label class="filter-label" for="spot-type-filter">Filter Slot Type</label>
+          <label class="filter-label" for="spot-type-filter">Filter Bay Type</label>
           <div class="filter-input-wrap">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
             <select class="filter-input" id="spot-type-filter">
-              <option value="all">Show All Bays</option>
+              <option value="all">All Bays</option>
               <option value="available">Only Available</option>
-              <option value="ev">⚡ EV Fast Charging</option>
-              <option value="accessible">♿ Accessible / ADA</option>
+              <option value="ev">⚡ 50kW EV Fast Charging</option>
             </select>
           </div>
         </div>
 
-        <div class="filter-group">
-          <label class="filter-label" for="quick-arrival-date">Target Arrival</label>
-          <div class="filter-input-wrap">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 16 14"></polyline>
-            </svg>
-            <input type="text" id="quick-arrival-date" class="filter-input" value="Today, Immediate" readonly>
-          </div>
-        </div>
-
-        <div class="filter-group">
-          <label class="filter-label">Access Method</label>
-          <div class="filter-input-wrap">
-            <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--status-available);">AUTOMATED LPR</span>
-          </div>
-        </div>
-
         <div>
-          <button class="primary-btn" id="btn-quick-find" onclick="document.getElementById('parking-map-container').scrollIntoView({behavior: 'smooth'})">
+          <button class="primary-btn" id="btn-quick-find" onclick="document.getElementById('parking-map-container').scrollIntoView({behavior: 'smooth'})" style="padding: 0.85rem 1.4rem;">
             <span>Explore Deck</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -257,22 +234,14 @@
               </div>
 
               <!-- Key Specs -->
-              <div class="detail-specs-grid">
+              <div class="detail-specs-grid" style="grid-template-columns: 1fr 1fr;">
                 <div class="spec-item">
-                  <span class="spec-label">Slot Category</span>
+                  <span class="spec-label">Category</span>
                   <span class="spec-val" id="sidebar-type">STANDARD</span>
                 </div>
                 <div class="spec-item">
-                  <span class="spec-label">Lift / Exit Distance</span>
+                  <span class="spec-label">To Elevator</span>
                   <span class="spec-val" id="sidebar-distance">18m</span>
-                </div>
-                <div class="spec-item">
-                  <span class="spec-label">Ultrasonic Sensor</span>
-                  <span class="spec-val" id="sidebar-sensor-id" style="font-family: var(--font-mono); font-size: 0.8rem;">SNSR-P1-01</span>
-                </div>
-                <div class="spec-item" id="sidebar-ev-info" style="display: none;">
-                  <span class="spec-label">Charger Output</span>
-                  <span class="spec-val" style="color: var(--cyan-primary);" id="sidebar-ev-power">50 kW Fast</span>
                 </div>
               </div>
 
@@ -346,33 +315,20 @@
       </div>
     </section>
 
-    <!-- Real-Time Smart City & IoT Analytics Section -->
-    <section class="analytics-section" id="analytics-section" aria-label="Smart City Analytics">
+    <!-- Real-Time Facility Overview Section -->
+    <section class="analytics-section" id="analytics-section" aria-label="Facility Overview">
       <div style="display: flex; align-items: center; justify-content: space-between;">
         <div>
-          <h2 style="font-size: 1.4rem; font-weight: 800;">Real-Time Facility Telemetry</h2>
-          <p style="font-size: 0.88rem; color: var(--text-muted);">Live IoT sensor array streams and peak demand predictions</p>
+          <h2 style="font-size: 1.35rem; font-weight: 800;">Real-Time Deck Overview</h2>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">Current capacity, EV charging availability, and peak demand</p>
         </div>
-        <span class="tech-badge" style="border-color: var(--cyan-primary); color: var(--cyan-primary);">
-          Azure IoT Hub Connected
+        <span class="tech-badge" style="border-color: var(--status-available); color: var(--status-available);">
+          ● Live Sensors Connected
         </span>
       </div>
 
       <!-- KPI Row -->
-      <div class="stats-kpi-row">
-        <div class="kpi-card">
-          <div class="kpi-icon-box">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 20V10M12 20V4M6 20v-6"></path>
-            </svg>
-          </div>
-          <div class="kpi-meta">
-            <span class="kpi-label">Deck Occupancy</span>
-            <span class="kpi-value" id="kpi-occupancy-rate">68%</span>
-            <span class="kpi-subtext">Optimal capacity range</span>
-          </div>
-        </div>
-
+      <div class="stats-kpi-row" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
         <div class="kpi-card emerald">
           <div class="kpi-icon-box">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -382,8 +338,8 @@
           </div>
           <div class="kpi-meta">
             <span class="kpi-label">Open Bays</span>
-            <span class="kpi-value" id="kpi-open-spots">24</span>
-            <span class="kpi-subtext">Across P1, P2 &amp; P3</span>
+            <span class="kpi-value" id="kpi-open-spots">18</span>
+            <span class="kpi-subtext">Ready for immediate booking</span>
           </div>
         </div>
 
@@ -395,67 +351,46 @@
           </div>
           <div class="kpi-meta">
             <span class="kpi-label">Available EV Chargers</span>
-            <span class="kpi-value" id="kpi-ev-open">5</span>
-            <span class="kpi-subtext">Up to 50 kW Ultra-fast</span>
+            <span class="kpi-value" id="kpi-ev-open">4</span>
+            <span class="kpi-subtext">50 kW Ultra-fast ports</span>
           </div>
         </div>
 
-        <div class="kpi-card indigo">
+        <div class="kpi-card">
           <div class="kpi-icon-box">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polyline points="12 6 12 12 14 14"></polyline>
+              <path d="M18 20V10M12 20V4M6 20v-6"></path>
             </svg>
           </div>
           <div class="kpi-meta">
-            <span class="kpi-label">Average Dwell Time</span>
-            <span class="kpi-value">2h 14m</span>
-            <span class="kpi-subtext">Turnover rate 3.4x/day</span>
+            <span class="kpi-label">Deck Occupancy</span>
+            <span class="kpi-value" id="kpi-occupancy-rate">50%</span>
+            <span class="kpi-subtext">Optimal capacity available</span>
           </div>
         </div>
       </div>
 
-      <!-- Charts & IoT Health Grid -->
-      <div class="charts-grid">
-        <!-- Peak Demand Histogram -->
-        <div class="chart-card">
-          <div class="chart-header">
-            <div class="chart-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="20" x2="18" y2="10"></line>
-                <line x1="12" y1="20" x2="12" y2="4"></line>
-                <line x1="6" y1="20" x2="6" y2="14"></line>
-              </svg>
-              <span>Today's Occupancy &amp; Peak Hour Demand</span>
-            </div>
-            <span style="font-size: 0.75rem; color: var(--text-dim); font-family: var(--font-mono);">PREDICTIVE MODEL V3.2</span>
+      <!-- Peak Demand Histogram Card -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span>Today's Peak Hour Demand</span>
           </div>
-
-          <div class="bar-chart-container" id="peak-hours-chart">
-            <!-- Dynamically rendered -->
-          </div>
-          <div style="display: flex; justify-content: space-between; margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-dim);">
-            <span>Morning Commute</span>
-            <span>Midday Lunch Peak</span>
-            <span>Evening Departure Rush</span>
-          </div>
+          <span style="font-size: 0.75rem; color: var(--text-dim);">Redmond Deck</span>
         </div>
 
-        <!-- IoT Sensor Array Health -->
-        <div class="chart-card">
-          <div class="chart-header">
-            <div class="chart-title">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 11a9 9 0 0 1 9 9"></path>
-                <path d="M4 4a16 16 0 0 1 16 16"></path>
-                <circle cx="5" cy="19" r="1"></circle>
-              </svg>
-              <span>IoT Edge Telemetry Nodes</span>
-            </div>
-          </div>
-          <div class="iot-telemetry-list" id="iot-nodes-list">
-            <!-- Dynamically rendered -->
-          </div>
+        <div class="bar-chart-container" id="peak-hours-chart">
+          <!-- Dynamically rendered -->
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-dim);">
+          <span>08:00 Commute</span>
+          <span>12:00 Midday</span>
+          <span>18:00 Evening Departure</span>
         </div>
       </div>
     </section>

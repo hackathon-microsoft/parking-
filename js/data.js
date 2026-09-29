@@ -26,6 +26,18 @@ export const LOCATIONS = [
   }
 ];
 
+export const HOURLY_PEAK_DATA = [
+  { hour: '08:00', load: 40, isPeak: false },
+  { hour: '10:00', load: 78, isPeak: true },
+  { hour: '12:00', load: 85, isPeak: true },
+  { hour: '14:00', load: 65, isPeak: false },
+  { hour: '16:00', load: 80, isPeak: true },
+  { hour: '18:00', load: 90, isPeak: true },
+  { hour: '20:00', load: 45, isPeak: false }
+];
+
+export const IOT_TELEMETRY_NODES = [];
+
 // Helper to generate 12 clean, spacious spots per level (6 top, 6 bottom)
 function createLevelSpots(levelPrefix, baseRate, evSlots, occupiedSlots) {
   const spots = [];
