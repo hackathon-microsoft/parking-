@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/parking-map.css">
   <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/hindsight.css">
 </head>
 <body>
 
@@ -62,6 +63,12 @@
         </ul>
 
         <div class="header-actions">
+          <!-- Hindsight AI Concierge Button -->
+          <button class="hindsight-nav-btn" id="btn-open-hindsight" title="Open ParkIn AI Concierge with Hindsight Memory">
+            <span class="neural-dot"></span>
+            <span>Hindsight AI</span>
+          </button>
+
           <!-- Sound Toggle -->
           <button class="icon-action-btn active" id="btn-sound-toggle" title="Toggle Audio Synthesizer Effects" aria-label="Toggle Sound Effects">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -673,6 +680,108 @@
       </div>
     </div>
   </footer>
+
+  <!-- Hindsight AI Agent Memory Concierge Drawer -->
+  <aside class="hindsight-drawer" id="hindsight-drawer" aria-label="Hindsight AI Assistant">
+    <div class="hindsight-header">
+      <div class="hindsight-title-group">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2">
+          <path d="M12 2a8 8 0 0 0-8 8c0 3.31 2.01 6.16 4.9 7.37L9 22h6l.1-4.63C17.99 16.16 20 13.31 20 10a8 8 0 0 0-8-8z"></path>
+          <path d="M9 10h.01M15 10h.01M9.5 14a3.5 3.5 0 0 0 5 0"></path>
+        </svg>
+        <div>
+          <div style="font-weight: 800; font-size: 1rem; color: #fff;">ParkIn Concierge</div>
+          <span class="hindsight-badge">Powered by Hindsight Memory</span>
+        </div>
+      </div>
+      <button class="modal-close-btn" id="close-hindsight-drawer" aria-label="Close Hindsight Assistant">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="hindsight-tabs">
+      <button class="hindsight-tab-btn active" id="tab-chat-mode">Memory Assistant</button>
+      <button class="hindsight-tab-btn" id="tab-graph-mode">Hindsight Memory Graph</button>
+    </div>
+
+    <!-- Chat Messages View -->
+    <div class="hindsight-chat-body" id="hindsight-chat-body">
+      <div class="chat-bubble assistant">
+        <div>
+          Hello! I am your <strong>ParkIn Concierge</strong>, powered by <strong>Hindsight long-term agent memory</strong>.
+          I remember your registered vehicle (<strong>WA-884-DEMO</strong>), your preference for <strong>50kW EV charging</strong> on Level P1, and your frequent parking routine.
+        </div>
+        <div class="quick-prompts-row">
+          <button class="prompt-pill" data-prompt="Find my usual spot">🎯 Find my usual spot</button>
+          <button class="prompt-pill" data-prompt="Where did I park last time?">🕒 Where did I park last time?</button>
+          <button class="prompt-pill" data-prompt="What do you remember about my profile?">🧠 What do you remember?</button>
+          <button class="prompt-pill" data-prompt="Recommend an EV spot near the exit">⚡ Recommend EV spot</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Memory Graph / Inspector View -->
+    <div class="hindsight-memory-panel" id="hindsight-memory-panel">
+      <div class="memory-category-card">
+        <div class="memory-category-title">
+          <span>Driver Entity Graph</span>
+          <span class="tech-badge" style="font-size: 0.65rem;">Retained</span>
+        </div>
+        <div class="memory-item-row">
+          <span>Plate / ID:</span>
+          <strong id="mem-plate">WA-884-DEMO</strong>
+        </div>
+        <div class="memory-item-row">
+          <span>Vehicle:</span>
+          <strong id="mem-vehicle">Tesla Model Y EV</strong>
+        </div>
+        <div class="memory-item-row">
+          <span>Preferred Bay:</span>
+          <strong id="mem-charger">50 kW Fast Charging (Level P1)</strong>
+        </div>
+        <div class="memory-item-row">
+          <span>Proximity:</span>
+          <strong>&lt; 25m to Elevator / Plaza</strong>
+        </div>
+      </div>
+
+      <div class="memory-category-card">
+        <div class="memory-category-title">
+          <span>Episodic Parking History</span>
+          <span class="tech-badge" style="font-size: 0.65rem;">Recalled</span>
+        </div>
+        <div id="mem-episodes-list">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <div class="memory-category-card">
+        <div class="memory-category-title">
+          <span>Hindsight Reflections</span>
+          <span class="tech-badge" style="font-size: 0.65rem;">Reflected</span>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;" id="mem-reflections">
+          • Prioritizes 50kW EV bays near the elevator.<br>
+          • Frequently visits Microsoft Bldg 99 Hub during 09:00 - 10:30 AM commute.
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Bar -->
+    <div class="hindsight-input-bar">
+      <input type="text" id="hindsight-input" class="hindsight-text-input" placeholder="Ask ParkIn AI (e.g. Find my usual spot)...">
+      <button class="hindsight-send-btn" id="hindsight-send-btn" aria-label="Send message">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </aside>
 
   <!-- Application Scripts -->
   <script type="module" src="js/app.js"></script>
