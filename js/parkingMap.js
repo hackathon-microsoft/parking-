@@ -88,16 +88,15 @@ export class ParkingMap {
     const floor = this.floors[this.currentLevel];
     const spots = floor.spots;
 
-    // Split 24 spots into 2 rows of 12 for realistic lane drive-through
-    const topRow = spots.slice(0, 12);
-    const bottomRow = spots.slice(12, 24);
+    // 6 bays top, 6 bays bottom for a clean, spacious layout
+    const topRow = spots.slice(0, 6);
+    const bottomRow = spots.slice(6, 12);
 
     const renderRow = (rowSpots) => {
       return rowSpots.map(spot => {
         const isDimmed = this.activeFilter !== 'all' && (
           (this.activeFilter === 'available' && spot.status !== 'available') ||
-          (this.activeFilter === 'ev' && spot.type !== 'ev') ||
-          (this.activeFilter === 'accessible' && spot.type !== 'accessible')
+          (this.activeFilter === 'ev' && spot.type !== 'ev')
         );
 
         let iconSvg = ICONS.carAvailable;
@@ -107,8 +106,6 @@ export class ParkingMap {
           iconSvg = ICONS.carReserved;
         } else if (spot.type === 'ev') {
           iconSvg = ICONS.evFast;
-        } else if (spot.type === 'accessible') {
-          iconSvg = ICONS.accessible;
         }
 
         const isSelected = this.selectedSpot && this.selectedSpot.id === spot.id;
@@ -116,13 +113,11 @@ export class ParkingMap {
         return `
           <div class="parking-slot status-${spot.status} ${spot.type === 'ev' ? 'status-ev' : ''} ${isSelected ? 'selected' : ''}"
                data-spot-id="${spot.id}"
-               style="${isDimmed ? 'opacity: 0.25; pointer-events: none;' : ''}"
-               title="${spot.id} - ${spot.type.toUpperCase()} (${spot.status})">
-            <span class="sensor-dot"></span>
+               style="${isDimmed ? 'opacity: 0.25; pointer-events: none;' : ''}">
             <div class="slot-badge-id">${spot.id}</div>
             <div class="slot-icon-visual">${iconSvg}</div>
             <div class="slot-badge-type type-${spot.type}">
-              ${spot.type === 'ev' ? '⚡ ' + (spot.evPower || 'EV') : spot.type}
+              ${spot.type === 'ev' ? '⚡ 50kW EV' : '$' + spot.ratePerHour.toFixed(0) + '/hr'}
             </div>
           </div>
         `;
@@ -131,24 +126,25 @@ export class ParkingMap {
 
     this.container.innerHTML = `
       <div class="parking-arena">
-        <!-- Top Bay Row (Slots 01 - 12) -->
+        <!-- Top Bay Row -->
         <div class="bays-row" id="bay-row-top">
           ${renderRow(topRow)}
         </div>
 
-        <!-- Central Driveway & Sensor Lane Marking -->
+        <!-- Central Driveway -->
         <div class="parking-driveway">
           <div class="driveway-sign">
-            <span>◀ ENTRY LANE</span>
-            <span style="color: var(--cyan-primary);">SPEED LIMIT 10 MPH</span>
+            <span>◀ INCOMING DRIVEWAY</span>
           </div>
           <div class="driveway-sign">
-            <span style="color: var(--status-available);">LEVEL ${this.currentLevel} SENSORS ACTIVE</span>
-            <span>EXIT / RAMP ▶</span>
+            <span style="color: var(--cyan-primary); font-weight: 700;">LEVEL ${this.currentLevel}</span>
+          </div>
+          <div class="driveway-sign">
+            <span>OUTGOING RAMP ▶</span>
           </div>
         </div>
 
-        <!-- Bottom Bay Row (Slots 13 - 24) -->
+        <!-- Bottom Bay Row -->
         <div class="bays-row" id="bay-row-bottom">
           ${renderRow(bottomRow)}
         </div>
